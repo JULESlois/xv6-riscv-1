@@ -7,9 +7,6 @@
 #include "types.h"
 #include "param.h"
 #include "spinlock.h"
-#include "sleeplock.h"
-#include "fs.h"
-#include "file.h"
 #include "memlayout.h"
 #include "riscv.h"
 #include "defs.h"
@@ -119,7 +116,6 @@ printf(char *fmt, ...)
     } else if(c0 == 0){
       break;
     } else {
-      // Print unknown % sequence to draw attention.
       consputc('%');
       consputc(c0);
     }
