@@ -101,6 +101,14 @@ extern uint64 sys_unlink(void);
 extern uint64 sys_link(void);
 extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
+extern uint64 sys_sem_init(void);
+extern uint64 sys_sem_p(void);
+extern uint64 sys_sem_v(void);
+extern uint64 sys_sem_value(void);
+extern uint64 sys_sem_try_p(void);
+extern uint64 sys_sync_counter_reset(void);
+extern uint64 sys_sync_counter_add(void);
+extern uint64 sys_sync_counter_get(void);
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -126,6 +134,14 @@ static uint64 (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
+[SYS_sem_init] sys_sem_init,
+[SYS_sem_p] sys_sem_p,
+[SYS_sem_v] sys_sem_v,
+[SYS_sem_value] sys_sem_value,
+[SYS_sem_try_p] sys_sem_try_p,
+[SYS_sync_counter_reset] sys_sync_counter_reset,
+[SYS_sync_counter_add] sys_sync_counter_add,
+[SYS_sync_counter_get] sys_sync_counter_get,
 };
 
 void

@@ -24,6 +24,14 @@ int getpid(void);
 char* sys_sbrk(int,int);
 int pause(int);
 int uptime(void);
+int sem_init(int, int);
+int sem_p(int);
+int sem_v(int);
+int sem_value(int);
+int sem_try_p(int);
+int sync_counter_reset(int);
+int sync_counter_add(int);
+int sync_counter_get(void);
 
 // ulib.c
 int stat(const char*, struct stat*);

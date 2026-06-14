@@ -1,54 +1,41 @@
-// init: The initial user-level program
-
 #include "kernel/types.h"
 #include "kernel/stat.h"
 #include "kernel/spinlock.h"
 #include "kernel/sleeplock.h"
 #include "kernel/fs.h"
 #include "kernel/file.h"
-#include "user/user.h"
 #include "kernel/fcntl.h"
-
-char *argv[] = { "sh", 0 };
+#include "user/user.h"
 
 int
 main(void)
 {
-  int pid, wpid;
+  int pid;                         // Child process id returned by fork.
+  int status;                      // Exit status collected from the test process.
+  char *argv[] = { "test_boot", 0 }; // exec argument vector terminated by a null pointer.
 
-  if(open("console", O_RDWR) < 0){
-    mknod("console", CONSOLE, 0);
-    open("console", O_RDWR);
+  if(open("console", O_RDWR) < 0){ // Open the console device; create it if needed.
+    mknod("console", CONSOLE, 0);  // Create the console device node in the root directory.
+    open("console", O_RDWR);       // Reopen console as file descriptor 0.
   }
-  dup(0);  // stdout
-  dup(0);  // stderr
+  dup(0);                          // Duplicate stdin to stdout.
+  dup(0);                          // Duplicate stdin to stderr.
 
-  for(;;){
-    printf("init: starting sh\n");
-    pid = fork();
-    if(pid < 0){
-      printf("init: fork failed\n");
-      exit(1);
-    }
-    if(pid == 0){
-      exec("sh", argv);
-      printf("init: exec sh failed\n");
-      exit(1);
-    }
+  printf("init: starting test_boot\n"); // Announce the automatic validation program.
+  pid = fork();                    // Create a real user process for the test program.
+  if(pid < 0){                     // A negative return means fork failed.
+    printf("init: fork failed\n"); // Print the failure before exiting.
+    exit(1);                       // Return a failing status to the kernel.
+  }
+  if(pid == 0){                    // The child process sees fork return zero.
+    exec("test_boot", argv);          // Replace the child image with the test ELF from fs.img.
+    printf("init: exec test_boot failed\n"); // exec returns only on failure.
+    exit(1);                       // Report the exec failure.
+  }
 
-    for(;;){
-      // this call to wait() returns if the shell exits,
-      // or if a parentless process exits.
-      wpid = wait((int *) 0);
-      if(wpid == pid){
-        // the shell exited; restart it.
-        break;
-      } else if(wpid < 0){
-        printf("init: wait returned an error\n");
-        exit(1);
-      } else {
-        // it was a parentless process; do nothing.
-      }
-    }
+  wait(&status);                   // Wait for the test process to finish.
+  printf("init: test_boot exited with status %d\n", status); // Print the test exit status.
+  for(;;){                         // init must stay alive after the test exits.
+    pause(100);                    // Sleep to avoid a busy loop.
   }
 }

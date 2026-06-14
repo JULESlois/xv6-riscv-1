@@ -107,3 +107,67 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64
+sys_sem_init(void)
+{
+  int id;                               // User-provided semaphore table index.
+  int value;                            // User-provided initial permit count.
+  argint(0, &id);                       // Read syscall argument 0 from trapframe.
+  argint(1, &value);                    // Read syscall argument 1 from trapframe.
+  return sem_init(id, value);           // Initialize the kernel semaphore slot.
+}
+
+uint64
+sys_sem_p(void)
+{
+  int id;                               // User-provided semaphore table index.
+  argint(0, &id);                       // Read syscall argument 0 from trapframe.
+  return sem_p(id);                     // Run the blocking P operation.
+}
+
+uint64
+sys_sem_v(void)
+{
+  int id;                               // User-provided semaphore table index.
+  argint(0, &id);                       // Read syscall argument 0 from trapframe.
+  return sem_v(id);                     // Run the V operation.
+}
+
+uint64
+sys_sem_value(void)
+{
+  int id;                               // User-provided semaphore table index.
+  argint(0, &id);                       // Read syscall argument 0 from trapframe.
+  return sem_value(id);                 // Return the current permit count.
+}
+
+uint64
+sys_sem_try_p(void)
+{
+  int id;                               // User-provided semaphore table index.
+  argint(0, &id);                       // Read syscall argument 0 from trapframe.
+  return sem_try_p(id);                 // Try to acquire without sleeping.
+}
+
+uint64
+sys_sync_counter_reset(void)
+{
+  int value;                            // User-provided new counter value.
+  argint(0, &value);                    // Read syscall argument 0 from trapframe.
+  return sync_counter_reset(value);     // Reset the shared kernel counter.
+}
+
+uint64
+sys_sync_counter_add(void)
+{
+  int delta;                            // User-provided increment amount.
+  argint(0, &delta);                    // Read syscall argument 0 from trapframe.
+  return sync_counter_add(delta);       // Add to the shared kernel counter.
+}
+
+uint64
+sys_sync_counter_get(void)
+{
+  return sync_counter_get();            // Return the shared kernel counter.
+}

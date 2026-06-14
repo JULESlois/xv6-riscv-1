@@ -60,6 +60,17 @@ void*           kalloc(void);
 void            kfree(void *);
 void            kinit(void);
 
+// semaphore.c
+void            seminit(void);
+int             sem_init(int, int);
+int             sem_p(int);
+int             sem_try_p(int);
+int             sem_v(int);
+int             sem_value(int);
+int             sync_counter_reset(int);
+int             sync_counter_add(int);
+int             sync_counter_get(void);
+
 // log.c
 void            initlog(int, struct superblock*);
 void            log_write(struct buf*);

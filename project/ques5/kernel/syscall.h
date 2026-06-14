@@ -20,3 +20,11 @@
 #define SYS_link   19
 #define SYS_mkdir  20
 #define SYS_close  21
+#define SYS_sem_init 22
+#define SYS_sem_p 23
+#define SYS_sem_v 24
+#define SYS_sem_value 25
+#define SYS_sem_try_p 26
+#define SYS_sync_counter_reset 27
+#define SYS_sync_counter_add 28
+#define SYS_sync_counter_get 29
