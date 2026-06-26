@@ -127,7 +127,14 @@ mkfs/mkfs: mkfs/mkfs.c $K/fs.h $K/param.h
 
 UPROGS=\
 	$U/_init\
-	$U/_test_fs
+	$U/_sh\
+	$U/_ls\
+	$U/_cat\
+	$U/_echo\
+	$U/_mkdir\
+	$U/_rm\
+	$U/_test_fs\
+	$U/_hello
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)
